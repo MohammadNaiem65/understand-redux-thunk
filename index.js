@@ -1,5 +1,6 @@
 const { createStore, applyMiddleware } = require('redux');
-const { delayAction, fetchTodos } = require('./middlewares');
+const { delayActionMiddleware, fetchAPIMiddleware } = require('./middlewares');
+const { fetchTodosFromServer } = require('./functions');
 
 // initial state
 const initialState = {
@@ -34,18 +35,11 @@ const todoReducer = (state = initialState, action) => {
 // store
 const store = createStore(
 	todoReducer,
-	applyMiddleware(delayAction, fetchTodos)
+	applyMiddleware(delayActionMiddleware, fetchAPIMiddleware)
 );
 
 // subscribe to state changes
 store.subscribe(() => console.log(store.getState()));
 
 // ! Dispatch actions
-// store.dispatch({
-// 	type: 'todos/todoAdded',
-// 	payload: 'An action dispatched',
-// });
-
-store.dispatch({
-	type: 'todos/fetchTodos',
-});
+store.dispatch(fetchTodosFromServer);
